@@ -41,17 +41,6 @@ input
 	background:white;
 }
 
-.enyo-panels
-{
-	margin:10px;
-}
-.enyo-panels > *
-{
-	box-shadow:-4px 0px 4px rgba(0,0,0,0.3);
-	-webkit-box-shadow:-4px 0px 4px rgba(0,0,0,0.3);
-	-moz-box-shadow:-4px 0px 4px rgba(0,0,0,0.3);
-}
-
 .highlight
 {
 	animation: highlight 1s ease-in-out 1;
@@ -59,3 +48,23 @@ input
 	-webkit-animation: highlight 1s ease-in-out 1;
 	-moz-animation: highlight 1s ease-in-out 1;
 }
+
+.onyx-item
+{
+	border-bottom:1px solid rgba(0,0,0,0.2);
+	border-top:1px solid rgba(255,255,255,0.5);
+}
+
+.enyo-list
+{
+	background-color:rgba(0,0,0,0.2);	
+}
+
+.centered-form
+{
+	width:50%;
+	min-width:480px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
