@@ -31,7 +31,7 @@ enyo.kind({
 			{kind:"onyx.InputDecorator", components:[
 				{kind:"onyx.Input"},
 			]},
-			{kind:"onyx.Button", content:"Paste", classes:"onyx-affirmative"},
+			{kind:"onyx.Button", content:"Paste", disabled:true, classes:"onyx-affirmative"},
 			{kind:"onyx.Button", content:"Refresh", ontap:"load"},
 			{kind:"onyx.Button", content:"Settings", ontap:"doShowSettings"},
 		]}
