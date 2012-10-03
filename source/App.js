@@ -3,7 +3,6 @@ enyo.kind({
 	kind:"Panels",
 	classes:"onyx",
 	draggable:false,
-	arrangerKind:"CardSlideInArranger",
 	fit: true,
 	events:
 	{
@@ -39,6 +38,7 @@ enyo.kind({
 	showClipboard:function()
 	{
 		this.setIndex(1);
+		this.$.Clipboard.focusInput();
 	},
 	showSettings:function()
 	{
@@ -51,7 +51,6 @@ enyo.kind({
 		{
 			this.$.Clipboard.load();
 		}
-		console.log("Got a message");
 		//this is what we like to call a nasty hack.
 		//AFAIK, we can't tell when the remote settings have changed,
 		//so we assume it takes less than a second.
@@ -59,9 +58,7 @@ enyo.kind({
 	},
 	sendMessage:function()
 	{
-		//TODO: send message
 		villo.chat.send({room:villo.user.username,message:Ubiquity.ID});
-		console.log("Sending a message");
 	},
 	logout:function()
 	{

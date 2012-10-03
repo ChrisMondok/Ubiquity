@@ -86,3 +86,8 @@ input
 	border:0px solid black;
 	padding:0px;
 }
+
+.row-padding
+{
+	padding:0.5em;
+}

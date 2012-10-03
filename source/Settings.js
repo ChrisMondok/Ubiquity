@@ -4,32 +4,44 @@ enyo.kind({
 	classes:"onyx",
 	events:{
 		onLogout:"",
-		onBack:""
+		onBack:"",
+		onClearAll:"",
 	},
 	statics:{
 		openLinksAutomatically:false,
 		openLinksInSharedWindow:false,
+		clearWebViewOnHide:false,
 	},
 	published:{
 		openLinksAutomatically:false,
 		openLinksInSharedWindow:false,
+		clearWebViewOnHide:false,
 	},
 	components:[
 		{kind:"Scroller", fit:true, components:[
 			{classes:"centered-form", components:[
 				{kind:onyx.Groupbox, components:[
 					{kind:"onyx.GroupboxHeader", content:"Account"},
-					{kind:onyx.Button, content:"Log out", ontap:"doLogout", classes:"onyx-negative rowbutton"},
+					{classes:"row-padding", components:[
+						{kind:onyx.Button, content:"Log out", ontap:"doLogout", classes:"rowbutton"},
+					]},
+					{classes:"row-padding", components:[
+						{kind:onyx.Button, content:"Clear all pastes", ontap:"", classes:"rowbutton onyx-negative"},
+					]},
 				]},
 				{kind:onyx.Groupbox, components:[
 					{kind:"onyx.GroupboxHeader", content:"Local settings"},
-					{kind:"FittableColumns", style:"padding:8px", components:[
-						{content:"Automatically open links", fit:true},	
-						{name:"autoLinkToggle", kind:"onyx.ToggleButton", onChange:"autoLinkToggleChanged"},
-					]},
-					{kind:"FittableColumns", style:"padding:8px", components:[
+					{kind:"FittableColumns", classes:"row-padding", components:[
 						{content:"Open links inside app", fit:true},	
 						{name:"sharedWindowToggle", kind:"onyx.ToggleButton", onChange:"sharedWindowToggleChanged"},
+					]},
+					{kind:"FittableColumns", classes:"row-padding", components:[
+						{content:"Clear web view when hiding", fit:true},	
+						{name:"clearWebViewToggle", kind:"onyx.ToggleButton", onChange:"clearWebViewToggleChanged"},
+					]},
+					{kind:"FittableColumns", classes:"row-padding", components:[
+						{content:"Automatically open links", fit:true},	
+						{name:"autoLinkToggle", kind:"onyx.ToggleButton", onChange:"autoLinkToggleChanged"},
 					]},
 
 				]},
@@ -55,6 +67,7 @@ enyo.kind({
 	{
 		value = this.getOpenLinksAutomatically();
 		this.$.autoLinkToggle.setValue(value);
+		Ubiquity.Settings.openLinksAutomatically = value;
 		enyo.setCookie("openLinksAutomatically",value);
 	},
 	openLinksInSharedWindowChanged:function()
@@ -64,6 +77,13 @@ enyo.kind({
 		Ubiquity.Settings.openLinksInSharedWindow = value;
 		enyo.setCookie("openLinksInSharedWindow",value);
 	},
+	clearWebViewOnHideChanged:function()
+	{
+		value = this.getClearWebViewOnHide();
+		this.$.clearWebViewToggle.setValue(value);
+		Ubiquity.Settings.clearWebViewOnHide = value;
+		enyo.setCookie("clearWebViewOnHide",value);
+	},
 	autoLinkToggleChanged:function(sender,event)
 	{
 		this.setOpenLinksAutomatically(sender.getValue())
@@ -71,5 +91,9 @@ enyo.kind({
 	sharedWindowToggleChanged:function(sender,event)
 	{
 		this.setOpenLinksInSharedWindow(sender.getValue());
+	},
+	clearWebViewToggleChanged:function(sender,event)
+	{
+		this.setClearWebViewOnHide(sender.getValue());
 	},
 })

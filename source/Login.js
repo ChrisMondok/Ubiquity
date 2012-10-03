@@ -61,7 +61,7 @@ enyo.kind({
 			title:"Ubiquity",
 			push:true
 		});
-		enyo.asyncMethod(this,this.redirect);
+		setTimeout(this.redirect.bind(this),1000);
 	},
 	rendered:function()
 	{

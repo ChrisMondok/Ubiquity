@@ -8,6 +8,7 @@ enyo.kind({
 		urlPattern:/^https?:\/\//,
 		popupWindow:null,
 		draggable:false,
+		initialLoad:true,
 	},
 	events:{
 		onShowSettings:"",
@@ -26,9 +27,9 @@ enyo.kind({
 					]},
 				]},
 			]},
-			{kind:"onyx.Toolbar", components:[
-				{kind:"onyx.InputDecorator", components:[
-					{name:"input", kind:"onyx.Input"},
+			{kind:"FittableColumns", classes:"onyx-toolbar onyx-toolbar-inline", components:[
+				{kind:"onyx.InputDecorator", fit:true, components:[
+					{name:"input", kind:"onyx.Input", style:""},
 				]},
 				{kind:"onyx.Button", content:"Paste", classes:"onyx-affirmative", ontap:"paste"},
 				{kind:"onyx.Button", content:"Refresh", ontap:"load"},
@@ -49,6 +50,10 @@ enyo.kind({
 	{
 		this.inherited(arguments);
 		clipboard = this;
+	},
+	rendered:function()
+	{
+		this.inherited(arguments);
 	},
 	renderClipboardComponent:function(sender,event)
 	{
@@ -71,26 +76,32 @@ enyo.kind({
 	{
 		var gotClipboard = function(cb)
 		{
-			var newItems = unescape(cb.storage);
-			this.setItems(enyo.json.parse(newItems));
+			var unparsed = unescape(cb.storage);
+			var parsed = enyo.json.parse(unparsed);
+			if(Ubiquity.Settings.openLinksAutomatically)
+				if(!this.getInitialLoad() && parsed.length - 1 == this.getItems().length)
+					if(this.getIsLink(parsed[0]))
+						this.visitUrl(parsed[0]);
+			this.setItems(parsed);
+			this.setInitialLoad(false);
 		}
 		villo.storage.get({privacy:true,title:"clipboard",callback:gotClipboard.bind(this)});
-		console.log("Loading");
 	},
 	deleteItem:function(sender,event)
 	{
 		var items = this.getItems();
 		items.splice(event.index,1);
+		villo.storage.set({privacy:true,title:"clipboard",data:escape(enyo.json.stringify(items))});
 		this.commitItems();
 	},
 	paste:function()
 	{
-		this.items.push(this.$.input.getValue());
+		this.items.unshift(this.$.input.getValue());
+		villo.storage.set({privacy:true,title:"clipboard",data:escape(enyo.json.stringify(this.getItems()))});
 		this.commitItems();
 	},
 	commitItems:function()
 	{
-		villo.storage.set({privacy:true,title:"clipboard",data:escape(enyo.json.stringify(this.getItems()))});
 		this.doLocalChangeMade();
 	},
 	itemsChanged:function()
@@ -101,14 +112,7 @@ enyo.kind({
 	visitUrlTap:function(sender,event)
 	{
 		var URL = this.getItems()[event.index];
-		if(Ubiquity.Settings.openLinksInSharedWindow)
-		{
-			this.$.WebView.setSrc(URL);
-			this.setIndex(1);
-			this.setDraggable(true);
-		}
-		else
-			window.open(URL);
+		this.visitUrl(URL);
 		//It's not as simple as this. Apparently, if you do a cross domain popup,
 		//it's a security exception to modify it afterwards.
 		//
@@ -118,6 +122,17 @@ enyo.kind({
 		//}
 		//else
 		//	this.setPopupWindow(window.open(URL),"ubiquityPopup");
+	},
+	visitUrl:function(URL)
+	{
+		if(Ubiquity.Settings.openLinksInSharedWindow)
+		{
+			this.$.WebView.setSrc(URL);
+			this.setIndex(1);
+			this.setDraggable(true);
+		}
+		else
+			window.open(URL);
 	},
 	hideWebView:function()
 	{
@@ -129,11 +144,16 @@ enyo.kind({
 		if(this.getIndex() == 0)
 		{
 			this.setDraggable(false);
-			this.$.WebView.setSrc("about:blank");
+			if(Ubiquity.Settings.clearWebViewOnHide)
+				this.$.WebView.setSrc("about:blank");
 		}
 	},
 	popoutTapped:function()
 	{
 		window.open(this.$.WebView.getSrc());
 	},
+	focusInput:function()
+	{
+		this.$.input.focus();
+	}
 });
