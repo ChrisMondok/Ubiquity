@@ -20,7 +20,7 @@ enyo.kind({
 						{kind:"FittableColumns", components:[
 							{name:"text", classes:"enyo-selectable", fit:true},
 							{name:"visitUrlButton", kind:onyx.Button, content:"Go", showing:false, ontap:"visitUrlTap", classes:"onyx-affirmative"},
-							{name:"deleteButton", kind:onyx.Button, content:"Go", ontap:"deleteTap", classes:"onyx-negative"},
+							{name:"deleteButton", kind:onyx.Button, content:"Delete", ontap:"deleteTap", classes:"onyx-negative"},
 						]},
 					]},
 				]},
@@ -37,8 +37,10 @@ enyo.kind({
 		{kind:"FittableRows", classes:"onyx", components:[
 			{name:"WebView", kind:"enyo.WebView", style:"width:100%", fit:true, src:"about:blank"},
 			{kind:"onyx.Toolbar", components:[
-				{kind:"onyx.Grabber"},
-				{content:"Toolbar!"}
+				{kind:"onyx.Grabber", ontap:"hideWebView"},
+				{kind:"onyx.IconButton", src:"assets/icon-back.png"},
+				{kind:"onyx.IconButton", src:"assets/icon-forward.png"},
+				{kind:"onyx.IconButton", src:"assets/icon-popout.png", ontap:"popoutTapped"},
 			]},
 		]},
 	],
@@ -81,9 +83,14 @@ enyo.kind({
 	visitUrlTap:function(sender,event)
 	{
 		var URL = this.getItems()[event.index];
-		this.$.WebView.setSrc(URL);
-		this.setIndex(1);
-		this.setDraggable(true);
+		if(Ubiquity.Settings.openLinksInSharedWindow)
+		{
+			this.$.WebView.setSrc(URL);
+			this.setIndex(1);
+			this.setDraggable(true);
+		}
+		else
+			window.open(URL);
 		//It's not as simple as this. Apparently, if you do a cross domain popup,
 		//it's a security exception to modify it afterwards.
 		//
@@ -94,6 +101,10 @@ enyo.kind({
 		//else
 		//	this.setPopupWindow(window.open(URL),"ubiquityPopup");
 	},
+	hideWebView:function()
+	{
+		this.setIndex(0);
+	},
 	indexChanged:function()
 	{
 		this.inherited(arguments);
@@ -102,5 +113,9 @@ enyo.kind({
 			this.setDraggable(false);
 			this.$.WebView.setSrc("about:blank");
 		}
-	}
+	},
+	popoutTapped:function()
+	{
+		window.open(this.$.WebView.getSrc());
+	},
 });

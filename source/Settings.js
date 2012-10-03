@@ -28,7 +28,7 @@ enyo.kind({
 						{name:"autoLinkToggle", kind:"onyx.ToggleButton", onChange:"autoLinkToggleChanged"},
 					]},
 					{kind:"FittableColumns", style:"padding:8px", components:[
-						{content:"Open links in shared window", fit:true},	
+						{content:"Open links inside app", fit:true},	
 						{name:"sharedWindowToggle", kind:"onyx.ToggleButton", onChange:"sharedWindowToggleChanged"},
 					]},
 

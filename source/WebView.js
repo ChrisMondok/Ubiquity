@@ -4,7 +4,7 @@ enyo.kind({
 	classes:"enyo-webview",
 	published:{
 		tag:"iframe",
-		src:"",
+		src:"about:blank",
 	},
 	srcChanged:function()
 	{
