@@ -11,6 +11,7 @@ enyo.kind({
 	},
 	events:{
 		onShowSettings:"",
+		onLocalChangeMade:"",
 	},
 	components:[
 		{kind:"FittableRows", style:"width:100%", components:[
@@ -20,16 +21,16 @@ enyo.kind({
 						{kind:"FittableColumns", components:[
 							{name:"text", classes:"enyo-selectable", fit:true},
 							{name:"visitUrlButton", kind:onyx.Button, content:"Go", showing:false, ontap:"visitUrlTap", classes:"onyx-affirmative"},
-							{name:"deleteButton", kind:onyx.Button, content:"Delete", ontap:"deleteTap", classes:"onyx-negative"},
+							{name:"deleteButton", kind:onyx.Button, content:"Delete", ontap:"deleteItem", classes:"onyx-negative"},
 						]},
 					]},
 				]},
 			]},
 			{kind:"onyx.Toolbar", components:[
 				{kind:"onyx.InputDecorator", components:[
-					{kind:"onyx.Input"},
+					{name:"input", kind:"onyx.Input"},
 				]},
-				{kind:"onyx.Button", content:"Paste", disabled:true, classes:"onyx-affirmative"},
+				{kind:"onyx.Button", content:"Paste", classes:"onyx-affirmative", ontap:"paste"},
 				{kind:"onyx.Button", content:"Refresh", ontap:"load"},
 				{kind:"onyx.Button", content:"Settings", ontap:"doShowSettings"},
 			]},
@@ -70,10 +71,27 @@ enyo.kind({
 	{
 		var gotClipboard = function(cb)
 		{
-			var newItems = cb.storage.replace(/\\\\/g,"\\").replace(/\\\"/g,"\"");
+			var newItems = unescape(cb.storage);
 			this.setItems(enyo.json.parse(newItems));
 		}
 		villo.storage.get({privacy:true,title:"clipboard",callback:gotClipboard.bind(this)});
+		console.log("Loading");
+	},
+	deleteItem:function(sender,event)
+	{
+		var items = this.getItems();
+		items.splice(event.index,1);
+		this.commitItems();
+	},
+	paste:function()
+	{
+		this.items.push(this.$.input.getValue());
+		this.commitItems();
+	},
+	commitItems:function()
+	{
+		villo.storage.set({privacy:true,title:"clipboard",data:escape(enyo.json.stringify(this.getItems()))});
+		this.doLocalChangeMade();
 	},
 	itemsChanged:function()
 	{

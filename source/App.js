@@ -16,7 +16,11 @@ enyo.kind({
 		onVilloLoginComplete:"initializeClipboard",
 		onShowSettings:"showSettings",
 		onGotMessage:"gotMessage",
+		onLocalChangeMade:"sendMessage",
 		onBack:"goBack",
+	},
+	statics:{
+		ID:Math.random()
 	},
 	components:[
 		{name:"Login", kind:"Ubiquity.Login"},
@@ -47,10 +51,17 @@ enyo.kind({
 		{
 			this.$.Clipboard.load();
 		}
+		console.log("Got a message");
 		//this is what we like to call a nasty hack.
 		//AFAIK, we can't tell when the remote settings have changed,
 		//so we assume it takes less than a second.
 		setTimeout(loadClipboard.bind(this),1000)
+	},
+	sendMessage:function()
+	{
+		//TODO: send message
+		villo.chat.send({room:villo.user.username,message:Ubiquity.ID});
+		console.log("Sending a message");
 	},
 	logout:function()
 	{
