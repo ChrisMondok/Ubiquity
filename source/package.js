@@ -8,5 +8,6 @@ enyo.depends(
 	"Clipboard.js",
 	"Login.js",
 	"Register.js",
-	"Settings.js"
+	"Settings.js",
+	"WebView.js"
 );

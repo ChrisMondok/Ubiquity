@@ -80,3 +80,9 @@ input
 	width:100%;
 }
 
+.enyo-webview
+{
+	margin:0px;
+	border:0px solid black;
+	padding:0px;
+}

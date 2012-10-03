@@ -1,11 +1,14 @@
 enyo.kind({
 	name: "Ubiquity",
 	kind:"Panels",
+	classes:"onyx",
 	draggable:false,
 	arrangerKind:"CardSlideInArranger",
 	fit: true,
 	events:
 	{
+		onOpenLinksAutomaticallyChanged:"",
+		onOpenLinksInSharedWindowChanged:"",
 	},
 	handlers:
 	{

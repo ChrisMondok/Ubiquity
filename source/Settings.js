@@ -6,6 +6,10 @@ enyo.kind({
 		onLogout:"",
 		onBack:""
 	},
+	statics:{
+		openLinksAutomatically:false,
+		openLinksInSharedWindow:false,
+	},
 	published:{
 		openLinksAutomatically:false,
 		openLinksInSharedWindow:false,
@@ -49,13 +53,16 @@ enyo.kind({
 	},
 	openLinksAutomaticallyChanged:function()
 	{
-		this.$.autoLinkToggle.setValue(this.getOpenLinksAutomatically());
-		enyo.setCookie("openLinksAutomatically",this.getOpenLinksAutomatically());
+		value = this.getOpenLinksAutomatically();
+		this.$.autoLinkToggle.setValue(value);
+		enyo.setCookie("openLinksAutomatically",value);
 	},
 	openLinksInSharedWindowChanged:function()
 	{
-		this.$.sharedWindowToggle.setValue(this.getOpenLinksInSharedWindow());
-		enyo.setCookie("openLinksInSharedWindow",this.getOpenLinksInSharedWindow());
+		value = this.getOpenLinksInSharedWindow();
+		this.$.sharedWindowToggle.setValue(value);
+		Ubiquity.Settings.openLinksInSharedWindow = value;
+		enyo.setCookie("openLinksInSharedWindow",value);
 	},
 	autoLinkToggleChanged:function(sender,event)
 	{
