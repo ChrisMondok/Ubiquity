@@ -24,7 +24,7 @@ enyo.kind({
 		{name:"panels", kind:enyo.Panels, fit:true, arrangerKind:"CardSlideInArranger", draggable:false, components:[
 			{components:[
 				{classes:"centered-form", components:[
-					{kind:onyx.Groupbox, components:[
+					{kind:"onyx.Groupbox", components:[
 						{kind:"onyx.GroupboxHeader", content:"Log in to Villo"},
 						{kind:"onyx.InputDecorator", components:[
 							{name:"usernameInput", kind:"onyx.Input", style:"width:100%", placeholder:"Username"},
@@ -34,8 +34,8 @@ enyo.kind({
 						]},
 					]},
 					{classes:"centered-form", style:"text-align:center", components:[
-						{kind:onyx.Button, content:"Log in", classes:"onyx-affirmative", ontap:"login"},
-						{kind:onyx.Button, content:"Register", ontap:"showRegisterPane"},
+						{kind:onyx.Button, content:"Log in", style:"width:50%", classes:"onyx-affirmative", ontap:"login"},
+						{kind:onyx.Button, content:"Register", style:"width:50%", ontap:"showRegisterPane"},
 					]},
 				]},
 			]},
@@ -88,6 +88,10 @@ enyo.kind({
 			},
 			this.loginCallback.bind(this)
 		);
+	},
+	logout:function()
+	{
+		villo.user.logout();
 	},
 	loginCallback:function(response)
 	{

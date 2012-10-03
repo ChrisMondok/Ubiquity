@@ -5,5 +5,6 @@
 	{"name": "panels", "path": "../lib/layout/panels"},
 	{"name": "slideable", "path": "../$lib/layout/slideable"},
 	{"name": "tree", "path": "../lib/layout/tree"},
-	{"name": "onyx", "path": "../lib/onyx"}
+	{"name": "onyx", "path": "../lib/onyx"},
+	{"name": "webos-ext", "path": "../lib/webos-ext"}
 ]

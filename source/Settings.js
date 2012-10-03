@@ -1,10 +1,22 @@
 enyo.kind({
 	name:"Ubiquity.Settings",
-	classes:"onyx-dark",
+	kind:"FittableRows",
+	classes:"onyx",
 	events:{
-		onLogout:""
+		onLogout:"",
+		onBack:""
 	},
 	components:[
-		{kind:onyx.Button, content:"Log out", ontap:"doLogout", classes:"onyx-negative"},
+		{kind:"Scroller", fit:true, components:[
+			{classes:"centered-form", components:[
+				{kind:onyx.Groupbox, components:[
+					{kind:"onyx.GroupboxHeader", content:"Account"},
+					{kind:onyx.Button, content:"Log out", ontap:"doLogout", classes:"onyx-negative rowbutton"},
+				]},
+			]},
+		]},
+		{kind:"onyx.MoreToolbar", components:[
+			{kind:"onyx.Button", content:"Back", ontap:"doBack"},
+		]},
 	],
 })

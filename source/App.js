@@ -2,27 +2,34 @@ enyo.kind({
 	name: "Ubiquity",
 	kind:"Panels",
 	draggable:false,
+	arrangerKind:"CardSlideInArranger",
 	fit: true,
 	events:
 	{
 	},
 	handlers:
 	{
+		onLogout:"logout",
 		onVilloLoginComplete:"initializeClipboard",
 		onShowSettings:"showSettings",
 		onGotMessage:"gotMessage",
+		onBack:"goBack",
 	},
 	components:[
-		{kind:"Ubiquity.Login"},
+		{name:"Login", kind:"Ubiquity.Login"},
 		{name:"Clipboard", kind:"Ubiquity.Clipboard"},
 		{kind:"Ubiquity.Settings"}
 	],
 	initializeClipboard:function()
 	{
 		this.$.Clipboard.load();
-		this.goToClipboard();
+		this.showClipboard();
 	},
-	goToClipboard:function()
+	showLogin:function()
+	{
+		this.setIndex(0);
+	},
+	showClipboard:function()
 	{
 		this.setIndex(1);
 	},
@@ -37,7 +44,19 @@ enyo.kind({
 		{
 			this.$.Clipboard.load();
 		}
-		setTimeout(loadClipboard.bind(this),1000);
+		//this is what we like to call a nasty hack.
+		//AFAIK, we can't tell when the remote settings have changed,
+		//so we assume it takes less than a second.
+		setTimeout(loadClipboard.bind(this),1000)
+	},
+	logout:function()
+	{
+		this.showLogin();
+		this.$.Login.logout();
+	},
+	goBack:function()
+	{
+		this.previous();
 	},
 });
 
