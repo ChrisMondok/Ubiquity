@@ -9,6 +9,7 @@ enyo.kind({
 	},
 	handlers:{
 		onVilloLoginComplete:"connectToMessaging",
+		onRegisterComplete:"registerComplete",
 	},
 	components:[
 		{
@@ -35,11 +36,11 @@ enyo.kind({
 					]},
 					{classes:"centered-form", style:"text-align:center", components:[
 						{kind:onyx.Button, content:"Log in", style:"width:50%", classes:"onyx-affirmative", ontap:"login"},
-						{kind:onyx.Button, content:"Register", style:"width:50%", ontap:"showRegisterPane"},
+						{kind:onyx.Button, content:"Register", disabled:false, style:"width:50%", ontap:"showRegisterPane"},
 					]},
 				]},
 			]},
-			{kind:"Ubiquity.Register", onCancelRegister:"showLoginPane"},
+			{name:"registerPane", kind:"Ubiquity.Register", onCancelRegister:"showLoginPane"},
 		]},
 	],
 	showLoginPane:function()
@@ -81,6 +82,7 @@ enyo.kind({
 	},
 	login:function()
 	{
+		this.$.waitPopup.show();
 		villo.user.login(
 			{
 				username:this.$.usernameInput.getValue(),
@@ -95,10 +97,13 @@ enyo.kind({
 	},
 	loginCallback:function(response)
 	{
+		this.$.waitPopup.hide();
 		if(response === true)
 		{
 			if(villo.user.isLoggedIn())
+			{
 				this.doVilloLoginComplete();
+			}
 		}
 		else
 		{
@@ -116,5 +121,12 @@ enyo.kind({
 		{
 			villo.chat.join({room:villo.user.username,callback:this.doGotMessage.bind(this),presence: {enabled:false}})
 		}
+	},
+	registerComplete:function()
+	{
+		this.$.usernameInput.setValue(this.$.registerPane.$.username.getValue());
+		this.$.passwordInput.setValue(this.$.registerPane.$.password.getValue());
+		this.showLoginPane();
+		this.login();
 	},
 });
