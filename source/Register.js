@@ -25,6 +25,7 @@ enyo.kind({
 				{kind:onyx.Button, content:"Register", style:"width:50%", classes:"onyx-affirmative", ontap:"register"},
 				{kind:onyx.Button, content:"Cancel", style:"width:50%", classes:"onyx-negative", ontap:"doCancelRegister"},
 			]},
+			{content:"Please note: registration is pretty much completely untested."},
 		]},
 	],
 	register:function()

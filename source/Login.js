@@ -35,7 +35,7 @@ enyo.kind({
 							{name:"passwordInput", kind:"onyx.Input", type:"password", style:"width:100%", placeholder:"Password"},
 						]},
 					]},
-					{classes:"centered-form", style:"text-align:center", components:[
+					{style:"text-align:center", components:[
 						{kind:onyx.Button, content:"Log in", style:"width:50%", classes:"onyx-affirmative", ontap:"login"},
 						{kind:onyx.Button, content:"Register", disabled:false, style:"width:50%", ontap:"showRegisterPane"},
 					]},
