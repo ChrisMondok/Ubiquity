@@ -13,6 +13,7 @@ enyo.kind({
 	{
 		onLogout:"logout",
 		onVilloLoginComplete:"initializeClipboard",
+		onVilloLogoutComplete:"gotMessage",
 		onShowSettings:"showSettings",
 		onGotMessage:"gotMessage",
 		onLocalChangeMade:"sendMessage",

@@ -16,7 +16,7 @@ enyo.kind({
 	},
 	components:[
 		{kind:"FittableRows", style:"width:100%", components:[
-			{kind:enyo.Scroller, classes:"recessed", touch:true, fit:true, components:[
+			{kind:enyo.Scroller, classes:"recessed", fit:true, components:[
 				{name:"clipboardRepeater", kind:enyo.Repeater, onSetupItem:"renderClipboardComponent", components:[
 					{name:"row", kind:onyx.Item, components:[
 						{kind:"FittableColumns", components:[
@@ -76,13 +76,26 @@ enyo.kind({
 	{
 		var gotClipboard = function(cb)
 		{
-			var unparsed = unescape(cb.storage);
-			var parsed = enyo.json.parse(unparsed);
-			if(Ubiquity.Settings.openLinksAutomatically)
-				if(!this.getInitialLoad() && parsed.length - 1 == this.getItems().length)
-					if(this.getIsLink(parsed[0]))
-						this.visitUrl(parsed[0]);
-			this.setItems(parsed);
+			var parsed;
+			if(cb.storage)
+			{
+				var unparsed = unescape(cb.storage);
+				parsed = enyo.json.parse(unparsed);
+				if(Ubiquity.Settings.openLinksAutomatically)
+					if(!this.getInitialLoad() && parsed.length - 1 == this.getItems().length)
+						if(this.getIsLink(parsed[0]))
+							this.visitUrl(parsed[0]);
+			}
+			if(parsed)
+			{
+				this.setItems(parsed);
+				console.log("Set items");
+			}
+			else
+			{
+				console.log("Empty items");
+				this.setItems(new Array());
+			}
 			this.setInitialLoad(false);
 		}
 		villo.storage.get({privacy:true,title:"clipboard",callback:gotClipboard.bind(this)});
@@ -97,6 +110,8 @@ enyo.kind({
 	paste:function()
 	{
 		this.items.unshift(this.$.input.getValue());
+		this.$.input.setValue("");
+		this.focusInput();
 		villo.storage.set({privacy:true,title:"clipboard",data:escape(enyo.json.stringify(this.getItems()))});
 		this.commitItems();
 	},

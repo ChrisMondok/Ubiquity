@@ -5,6 +5,7 @@ enyo.kind({
 	fit:true,
 	events:{
 		onVilloLoginComplete:"",
+		onVilloLogoutComplete:"",
 		onGotMessage:"",
 	},
 	handlers:{
@@ -94,6 +95,7 @@ enyo.kind({
 	logout:function()
 	{
 		villo.user.logout();
+		this.doVilloLogoutComplete();
 	},
 	loginCallback:function(response)
 	{
