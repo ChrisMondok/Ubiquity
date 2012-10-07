@@ -5,7 +5,7 @@ enyo.kind({
 	events:{
 		onLogout:"",
 		onBack:"",
-		onClearAll:"",
+		onClearTapped:"",
 	},
 	statics:{
 		openLinksAutomatically:false,
@@ -26,7 +26,7 @@ enyo.kind({
 						{kind:onyx.Button, content:"Log out", ontap:"doLogout", classes:"rowbutton"},
 					]},
 					{classes:"row-padding", components:[
-						{kind:onyx.Button, content:"Clear all pastes", ontap:"", classes:"rowbutton onyx-negative"},
+						{kind:onyx.Button, content:"Clear all pastes", ontap:"doClearTapped", classes:"rowbutton onyx-negative"},
 					]},
 				]},
 				{kind:onyx.Groupbox, components:[

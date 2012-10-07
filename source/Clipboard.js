@@ -2,6 +2,7 @@ enyo.kind({
 	name:"Ubiquity.Clipboard",
 	kind:"Panels",
 	arrangerKind:"CollapsingArranger",
+	classes:"onyx",
 	fit:true,
 	published:{
 		items:new Array(),
@@ -13,23 +14,28 @@ enyo.kind({
 	events:{
 		onShowSettings:"",
 		onLocalChangeMade:"",
+		onNewItemAdded:""
+	},
+	handlers:{
+		onClearAll:"clearAll",
 	},
 	components:[
 		{kind:"FittableRows", style:"width:100%", components:[
-			{kind:enyo.Scroller, classes:"recessed", fit:true, components:[
+			{kind:enyo.Scroller, fit:true, components:[
 				{name:"clipboardRepeater", kind:enyo.Repeater, onSetupItem:"renderClipboardComponent", components:[
 					{name:"row", kind:onyx.Item, components:[
-						{kind:"FittableColumns", components:[
-							{name:"text", classes:"enyo-selectable", fit:true},
+						{kind:"FittableColumns", classes:"clipboard-row", components:[
 							{name:"visitUrlButton", kind:onyx.Button, content:"Go", showing:false, ontap:"visitUrlTap", classes:"onyx-affirmative"},
+							{name:"text", classes:"enyo-selectable clipboard-text", fit:true},
 							{name:"deleteButton", kind:onyx.Button, content:"Delete", ontap:"deleteItem", classes:"onyx-negative"},
 						]},
 					]},
 				]},
 			]},
-			{kind:"FittableColumns", classes:"onyx-toolbar onyx-toolbar-inline", components:[
-				{kind:"onyx.InputDecorator", fit:true, components:[
-					{name:"input", kind:"onyx.Input", style:""},
+			//{kind:"FittableColumns", classes:"onyx-toolbar onyx-toolbar-inline", components:[
+			{kind:"onyx.MoreToolbar", components:[
+				{kind:"onyx.InputDecorator", components:[
+					{name:"input", kind:"onyx.Input"},
 				]},
 				{kind:"onyx.Button", content:"Paste", classes:"onyx-affirmative", ontap:"paste"},
 				{kind:"onyx.Button", content:"Refresh", ontap:"load"},
@@ -86,16 +92,11 @@ enyo.kind({
 						if(this.getIsLink(parsed[0]))
 							this.visitUrl(parsed[0]);
 			}
+
 			if(parsed)
-			{
 				this.setItems(parsed);
-				console.log("Set items");
-			}
 			else
-			{
-				console.log("Empty items");
 				this.setItems(new Array());
-			}
 			this.setInitialLoad(false);
 		}
 		villo.storage.get({privacy:true,title:"clipboard",callback:gotClipboard.bind(this)});
@@ -105,7 +106,9 @@ enyo.kind({
 		var items = this.getItems();
 		items.splice(event.index,1);
 		villo.storage.set({privacy:true,title:"clipboard",data:escape(enyo.json.stringify(items))});
-		this.commitItems();
+		this.doLocalChangeMade();
+
+		this.$.clipboardRepeater.getComponents()[event.index].$.row.addClass("fadeout");
 	},
 	paste:function()
 	{
@@ -113,11 +116,31 @@ enyo.kind({
 		this.$.input.setValue("");
 		this.focusInput();
 		villo.storage.set({privacy:true,title:"clipboard",data:escape(enyo.json.stringify(this.getItems()))});
-		this.commitItems();
+		this.itemsChanged();
+		this.doNewItemAdded();
 	},
-	commitItems:function()
+	clearAll:function()
 	{
+		this.setItems([]);
+		villo.storage.set({privacy:true,title:"clipboard",data:escape(enyo.json.stringify(this.getItems()))});
+		this.itemsChanged();
 		this.doLocalChangeMade();
+	},
+	addTransientItem:function(input)
+	{
+		this.items.unshift(input);
+		this.itemsChanged();
+		this.indicateNew();
+	},
+	indicateNew:function()
+	{
+		var newestComponent = this.$.clipboardRepeater.getComponents()[0];
+		newestComponent.$.row.addClass("slidein");
+		/*
+		 var components = this.$.clipboardRepeater.getComponents();
+		for(c in components)
+			components[c].$.row.addClass("slide");
+		*/
 	},
 	itemsChanged:function()
 	{
@@ -128,15 +151,6 @@ enyo.kind({
 	{
 		var URL = this.getItems()[event.index];
 		this.visitUrl(URL);
-		//It's not as simple as this. Apparently, if you do a cross domain popup,
-		//it's a security exception to modify it afterwards.
-		//
-		//if(Ubiquity.Settings.openLinksInSharedWindow && this.getPopupWindow())
-		//{
-		//	this.popupWindow.location.href = URL;
-		//}
-		//else
-		//	this.setPopupWindow(window.open(URL),"ubiquityPopup");
 	},
 	visitUrl:function(URL)
 	{

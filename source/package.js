@@ -4,6 +4,7 @@ enyo.depends(
 	"$lib/webos-ext",
 	"$lib/villo",
 	"App.css",
+	"Animations.css",
 	"App.js",
 	"Clipboard.js",
 	"Login.js",

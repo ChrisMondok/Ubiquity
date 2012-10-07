@@ -2,51 +2,35 @@
 	Put anything you reference with "url()" in ../assets/
 	This way, you can minify your application, and just remove the "source" folder for production
 */
-@keyframes highlight {
-  from {
-	background-color: #C4E3FE;
-  }
-  to {
-	background-color: #EAEAEA;
-  }
-}
-@-o-keyframes highlight {
-  from {
-	background-color: #C4E3FE;
-  }
-  to {
-	background-color: #EAEAEA;
-  }
-}
-@-webkit-keyframes highlight {
-  from {
-	background-color: #C4E3FE;
-  }
-  to {
-	background-color: #EAEAEA;
-  }
-}
-@-moz-keyframes highlight {
-  from {
-	background-color: #C4E3FE;
-  }
-  to {
-	background-color: #EAEAEA;
-  }
-}
-
+@import url("Animations.css");
 input
 {
 	color:black;
 	background:white;
 }
 
-.highlight
+.slidein
 {
-	animation: highlight 1s ease-in-out 1;
-	-o-animation: highlight 1s ease-in-out 1;
-	-webkit-animation: highlight 1s ease-in-out 1;
-	-moz-animation: highlight 1s ease-in-out 1;
+	animation: slidein 0.5s ease-in;
+	-o-animation: slidein 0.5s ease-in;
+	-webkit-animation: slidein 0.5s ease-in;
+	-moz-animation: slidein 0.5s ease-in;
+}
+
+.fadeout
+{
+	animation: fadeout 0.5s ease-in;
+	-o-animation: fadeout 0.25s ease-in;
+	-webkit-animation: fadeout 0.5s ease-in;
+	-moz-animation: fadeout 0.5s ease-in;
+}
+
+.slidein .fadeout
+{
+	transform-origin: 0% 100%;
+	-o-transform-origin: 0% 0%;
+	-webkit-transform-origin: 0% 0%;
+	-moz-transform-origin: 0% 0%;
 }
 
 .onyx-item
@@ -57,9 +41,6 @@ input
 
 .recessed
 {
-	border-color:black;
-	border-style:solid;
-	border-width:0px 4px 0px 4px;
 	background-color:rgba(0,0,0,0.1);
 }
 
@@ -90,4 +71,14 @@ input
 .row-padding
 {
 	padding:0.5em;
+}
+
+.clipboard-row > *
+{
+	vertical-align:middle;
+}
+
+.clipboard-text
+{
+	padding:0ex 1ex;
 }

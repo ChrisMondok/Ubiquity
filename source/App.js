@@ -17,7 +17,9 @@ enyo.kind({
 		onShowSettings:"showSettings",
 		onGotMessage:"gotMessage",
 		onLocalChangeMade:"sendMessage",
+		onNewItemAdded:"sendNewItemMessage",
 		onBack:"goBack",
+		onClearTapped:"doClearAll",
 	},
 	statics:{
 		ID:Math.random()
@@ -45,13 +47,19 @@ enyo.kind({
 	{
 		this.setIndex(2);
 	},
-	gotMessage:function()
+	gotMessage:function(caller,response)
 	{
-		this.$.Clipboard.load();
+		if(response.message.newItem && response.message.id != Ubiquity.ID)
+		{
+			var newItem = response.message.newItem;
+			this.$.Clipboard.addTransientItem(unescape(newItem));
+		}
+
 		var loadClipboard = function()
 		{
 			this.$.Clipboard.load();
 		}
+			
 		//this is what we like to call a nasty hack.
 		//AFAIK, we can't tell when the remote settings have changed,
 		//so we assume it takes less than a second.
@@ -59,7 +67,14 @@ enyo.kind({
 	},
 	sendMessage:function()
 	{
-		villo.chat.send({room:villo.user.username,message:Ubiquity.ID});
+		villo.chat.send({room:villo.user.username,message:{"id":Ubiquity.ID}});
+	},
+	sendNewItemMessage:function()
+	{
+		villo.chat.send({room:villo.user.username,message:{
+			"id":Ubiquity.ID,
+			"newItem":escape(this.$.Clipboard.getItems()[0])
+		}});
 	},
 	logout:function()
 	{
@@ -69,6 +84,10 @@ enyo.kind({
 	goBack:function()
 	{
 		this.previous();
+	},
+	doClearAll:function()
+	{
+		this.waterfall("onClearAll");
 	},
 });
 
