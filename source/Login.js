@@ -1,8 +1,7 @@
 enyo.kind({
 	name:"Ubiquity.Login",
-	classes:"onyx centered",
-	kind:"FittableRows",
-	fit:true,
+	classes:"onyx centered vertically-centered",
+	kind:"Scroller",
 	events:{
 		onVilloLoginComplete:"",
 		onVilloLogoutComplete:"",
@@ -13,35 +12,25 @@ enyo.kind({
 		onRegisterComplete:"registerComplete",
 	},
 	components:[
-		{
-			name:"waitPopup",
-			kind:"onyx.Popup", style:"text-align:center", floating:true, centered:true, scrim:true, modal:true, autoDismiss:false, components:[
-			{kind:onyx.Spinner},
-			{name:"waitMessage", content:"Please wait"},
-		]},
-		{name:"errorPopup", kind:"onyx.Popup", style:"text-align:center", floating:true, centered:true, scrim:true, modal:true, components:[
-			{name:"errorMessage", content:"Please wait"},
-			{kind:onyx.Button, content:"Ok", ontap:"hideErrorPopup"},
-		]},
-		{name:"panels", kind:enyo.Panels, fit:true, arrangerKind:"CardSlideInArranger", draggable:false, components:[
-			{components:[
-				{classes:"centered-form", components:[
-					{kind:"onyx.Groupbox", components:[
-						{kind:"onyx.GroupboxHeader", content:"Log in to Villo"},
-						{kind:"onyx.InputDecorator", components:[
-							{name:"usernameInput", kind:"onyx.Input", style:"width:100%", placeholder:"Username"},
-						]},
-						{kind:"onyx.InputDecorator", components:[
-							{name:"passwordInput", kind:"onyx.Input", type:"password", style:"width:100%", placeholder:"Password"},
-						]},
-					]},
-					{style:"text-align:center", components:[
-						{kind:onyx.Button, content:"Log in", style:"width:50%", classes:"onyx-affirmative", ontap:"login"},
-						{kind:onyx.Button, content:"Register", disabled:false, style:"width:50%", ontap:"showRegisterPane"},
+		{classes:"centered-form", components:[
+			{kind:"onyx.Groupbox", classes:"vertically-centered", fit:true, components:[
+				{kind:"onyx.GroupboxHeader", content:"Log in to Villo"},
+				{kind:"onyx.InputDecorator", components:[
+					{name:"usernameInput", kind:"onyx.Input", style:"width:100%", placeholder:"Username"},
+				]},
+				{kind:"onyx.InputDecorator", components:[
+					{name:"passwordInput", kind:"onyx.Input", type:"password", style:"width:100%", placeholder:"Password"},
+				]},
+			]},
+			{style:"text-align:center", components:[
+				{kind:onyx.Button, content:"Log in", classes:"onyx-affirmative rowbutton", ontap:"login"},
+				{name:"errorDrawer", open:false, kind:"onyx.Drawer", components:[
+					{kind:"FittableColumns", classes:"error vertically-centered", components:[
+						{kind:enyo.Image, src:"assets/warning.png"},
+						{fit:true, name:"errorMessage", content:"An error occurred"},
 					]},
 				]},
 			]},
-			{name:"registerPane", kind:"Ubiquity.Register", onCancelRegister:"showLoginPane"},
 		]},
 	],
 	showLoginPane:function()
@@ -63,27 +52,22 @@ enyo.kind({
 			title:"Ubiquity",
 			push:true
 		});
-		setTimeout(this.redirect.bind(this),1000);
 	},
 	rendered:function()
 	{
 		this.inherited(arguments);
-		this.$.waitMessage.setContent("Connecting to villo.");
-		this.$.waitPopup.show();
+		this.redirect();
 	},
 	redirect:function()
 	{
-		this.$.waitPopup.hide();
 		if(villo.user.isLoggedIn())
 		{
+			this.$.usernameInput.setValue(villo.user.username);
 			this.doVilloLoginComplete();
 		}
-		else
-			this.$.panels.setIndex(0);
 	},
 	login:function()
 	{
-		this.$.waitPopup.show();
 		villo.user.login(
 			{
 				username:this.$.usernameInput.getValue(),
@@ -91,6 +75,7 @@ enyo.kind({
 			},
 			this.loginCallback.bind(this)
 		);
+		this.hideError();
 	},
 	logout:function()
 	{
@@ -99,23 +84,24 @@ enyo.kind({
 	},
 	loginCallback:function(response)
 	{
-		this.$.waitPopup.hide();
 		if(response === true)
 		{
 			if(villo.user.isLoggedIn())
 			{
+				this.$.passwordInput.setValue("");
 				this.doVilloLoginComplete();
+			}
+			else
+			{
+				this.$.errorDrawer.setOpen(true);
+				this.$.errorMessage.setContent("Login failed");
 			}
 		}
 		else
 		{
+			this.$.errorDrawer.setOpen(true);
 			this.$.errorMessage.setContent("Check username and password");
-			this.$.errorPopup.show()
 		}
-	},
-	hideErrorPopup:function()
-	{
-		this.$.errorPopup.hide();
 	},
 	connectToMessaging:function()
 	{
@@ -131,4 +117,8 @@ enyo.kind({
 		this.showLoginPane();
 		this.login();
 	},
+	hideError:function()
+	{
+		this.$.errorDrawer.setOpen(false);
+	}
 });

@@ -24,7 +24,7 @@ enyo.kind({
 			{kind:enyo.Scroller, fit:true, components:[
 				{name:"clipboardRepeater", kind:enyo.Repeater, onSetupItem:"renderClipboardComponent", components:[
 					{name:"row", kind:onyx.Item, components:[
-						{kind:"FittableColumns", classes:"clipboard-row", components:[
+						{kind:"FittableColumns", classes:"vertically-centered", components:[
 							{name:"visitUrlButton", kind:onyx.Button, content:"Go", showing:false, ontap:"visitUrlTap", classes:"onyx-affirmative"},
 							{name:"text", classes:"enyo-selectable clipboard-text", fit:true},
 							{name:"deleteButton", kind:onyx.Button, content:"Delete", ontap:"deleteItem", classes:"onyx-negative"},
@@ -33,7 +33,7 @@ enyo.kind({
 				]},
 			]},
 			//{kind:"FittableColumns", classes:"onyx-toolbar onyx-toolbar-inline", components:[
-			{kind:"onyx.MoreToolbar", components:[
+			{kind:"onyx.Toolbar", components:[
 				{kind:"onyx.InputDecorator", components:[
 					{name:"input", kind:"onyx.Input"},
 				]},

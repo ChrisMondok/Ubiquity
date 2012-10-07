@@ -1,0 +1,93 @@
+/* Slide in */
+@keyframes slidein {
+  from {
+	transform:translate(0,-100%);
+  }
+  to {
+	transform:translate(0,0%);
+  }
+}
+@-o-keyframes slidein {
+  from {
+	-o-transform:translate(0,-100%);
+  }
+  to {
+	-o-transform:translate(0,0%);
+  }
+}
+@-webkit-keyframes slidein {
+  from {
+	-webkit-transform:translate(0,-100%);
+  }
+  to {
+	-webkit-transform:translate(0,0%);
+  }
+}
+@-moz-keyframes slidein {
+  from {
+	-moz-transform:translate(0,-100%);
+  }
+  to {
+	-moz-transform:translate(0,0%);
+  }
+}
+/* Fade out */
+@keyframes fadeout {
+  to {
+	opacity:0;
+  }
+}
+@-o-keyframes fadeout {
+  to {
+	opacity:0;
+  }
+}
+@-webkit-keyframes fadeout {
+  from {
+	-webkit-transform:translate(0,-100%);
+  }
+  to {
+	-webkit-transform:translate(0,0%);
+  }
+}
+@-moz-keyframes fadeout {
+  from {
+	-moz-transform:translate(0,-100%);
+  }
+  to {
+	-moz-transform:translate(0,0%);
+  }
+}
+/* Highlight */
+@keyframes highlight {
+  from {
+	background-color: #C4E3FE;
+  }
+  to {
+	background-color: transparent;
+  }
+}
+@-o-keyframes highlight {
+  from {
+	background-color: #C4E3FE;
+  }
+  to {
+	background-color: transparent;
+  }
+}
+@-webkit-keyframes highlight {
+  from {
+	background-color: #C4E3FE;
+  }
+  to {
+	background-color: transparent;
+  }
+}
+@-moz-keyframes highlight {
+  from {
+	background-color: #C4E3FE;
+  }
+  to {
+	background-color: transparent;
+  }
+}

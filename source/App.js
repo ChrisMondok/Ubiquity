@@ -1,6 +1,8 @@
 enyo.kind({
 	name: "Ubiquity",
 	kind:"Panels",
+	arrangerKind:"LeftRightArranger",
+	margin:0,
 	classes:"onyx",
 	draggable:false,
 	fit: true,
@@ -41,7 +43,6 @@ enyo.kind({
 	showClipboard:function()
 	{
 		this.setIndex(1);
-		this.$.Clipboard.focusInput();
 	},
 	showSettings:function()
 	{

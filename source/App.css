@@ -50,9 +50,11 @@ input
 	margin-left:auto;
 	margin-right:auto;
 }
+
 .centered-form > *
 {
-	margin:1em 0em;
+	margin:1em 0em 0em 0em;
+	vertical-align:middle;
 }
 
 .rowbutton
@@ -73,7 +75,7 @@ input
 	padding:0.5em;
 }
 
-.clipboard-row > *
+.vertically-centered > *
 {
 	vertical-align:middle;
 }
@@ -81,4 +83,14 @@ input
 .clipboard-text
 {
 	padding:0ex 1ex;
+}
+
+.error
+{
+	color:red;
+}
+
+.error > img
+{
+	margin-right:1ex;
 }
