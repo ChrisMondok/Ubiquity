@@ -83,6 +83,7 @@ input
 .clipboard-text
 {
 	padding:0ex 1ex;
+	word-wrap: break-word;
 }
 
 .error

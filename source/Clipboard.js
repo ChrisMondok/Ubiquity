@@ -36,6 +36,7 @@ enyo.kind({
 			{kind:"onyx.Toolbar", components:[
 				{kind:"onyx.InputDecorator", components:[
 					{name:"input", kind:"onyx.Input"},
+					{kind:"onyx.IconButton", style:"margin:-1ex 0ex", ontap:"clearInput", src:"assets/clear.png"},
 				]},
 				{kind:"onyx.Button", content:"Paste", classes:"onyx-affirmative", ontap:"paste"},
 				{kind:"onyx.Button", content:"Refresh", ontap:"load"},
@@ -118,6 +119,10 @@ enyo.kind({
 		villo.storage.set({privacy:true,title:"clipboard",data:escape(enyo.json.stringify(this.getItems()))});
 		this.itemsChanged();
 		this.doNewItemAdded();
+	},
+	clearInput:function()
+	{
+		this.$.input.setValue("");
 	},
 	clearAll:function()
 	{
