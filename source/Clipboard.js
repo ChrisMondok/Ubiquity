@@ -25,9 +25,9 @@ enyo.kind({
 				{name:"clipboardRepeater", kind:enyo.Repeater, onSetupItem:"renderClipboardComponent", components:[
 					{name:"row", kind:onyx.Item, components:[
 						{kind:"FittableColumns", classes:"vertically-centered", components:[
-							{name:"visitUrlButton", kind:onyx.Button, content:"Go", showing:false, ontap:"visitUrlTap"},
+							{name:"visitUrlButton", kind:onyx.Button, content:$L("Go"), showing:false, ontap:"visitUrlTap"},
 							{name:"text", classes:"enyo-selectable clipboard-text", fit:true},
-							{name:"deleteButton", kind:onyx.Button, content:"Delete", ontap:"deleteItem", classes:"onyx-negative"},
+							{name:"deleteButton", kind:onyx.Button, content:$L("Delete"), ontap:"deleteItem", classes:"onyx-negative"},
 						]},
 					]},
 				]},
@@ -37,9 +37,9 @@ enyo.kind({
 					{name:"input", kind:"onyx.Input", style:"width:100%", onkeypress:"handleKeyPress"},
 					//{kind:"onyx.IconButton", style:"margin:-1ex 0ex", ontap:"clearInput", src:"assets/clear.png"},
 				]},
-				{kind:"onyx.Button", content:"Paste", classes:"onyx-affirmative", ontap:"paste"},
-				{kind:"onyx.Button", content:"Refresh", ontap:"load"},
-				{kind:"onyx.Button", content:"Settings", ontap:"doShowSettings"},
+				{kind:"onyx.Button", content:$L("Paste"), classes:"onyx-affirmative", ontap:"paste"},
+				{kind:"onyx.Button", content:$L("Refresh"), ontap:"load"},
+				{kind:"onyx.Button", content:$L("Settings"), ontap:"doShowSettings"},
 			]},
 		]},
 		{kind:"FittableRows", classes:"onyx", components:[

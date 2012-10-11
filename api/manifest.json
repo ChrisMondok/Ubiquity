@@ -6,5 +6,6 @@
 	{"name": "slideable", "path": "../$lib/layout/slideable"},
 	{"name": "tree", "path": "../lib/layout/tree"},
 	{"name": "onyx", "path": "../lib/onyx"},
+	{"name": "g11n", "path": "../lib/g11n"},
 	{"name": "webos-ext", "path": "../lib/webos-ext"}
 ]

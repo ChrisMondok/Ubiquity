@@ -3,6 +3,7 @@ enyo.depends(
 	"$lib/onyx",
 	"$lib/webos-ext",
 	"$lib/villo",
+	"$lib/g11n",
 	"App.css",
 	"Animations.css",
 	"App.js",
