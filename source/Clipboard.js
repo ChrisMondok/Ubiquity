@@ -25,18 +25,17 @@ enyo.kind({
 				{name:"clipboardRepeater", kind:enyo.Repeater, onSetupItem:"renderClipboardComponent", components:[
 					{name:"row", kind:onyx.Item, components:[
 						{kind:"FittableColumns", classes:"vertically-centered", components:[
-							{name:"visitUrlButton", kind:onyx.Button, content:"Go", showing:false, ontap:"visitUrlTap", classes:"onyx-affirmative"},
+							{name:"visitUrlButton", kind:onyx.Button, content:"Go", showing:false, ontap:"visitUrlTap"},
 							{name:"text", classes:"enyo-selectable clipboard-text", fit:true},
 							{name:"deleteButton", kind:onyx.Button, content:"Delete", ontap:"deleteItem", classes:"onyx-negative"},
 						]},
 					]},
 				]},
 			]},
-			//{kind:"FittableColumns", classes:"onyx-toolbar onyx-toolbar-inline", components:[
-			{kind:"onyx.Toolbar", components:[
-				{kind:"onyx.InputDecorator", components:[
-					{name:"input", kind:"onyx.Input"},
-					{kind:"onyx.IconButton", style:"margin:-1ex 0ex", ontap:"clearInput", src:"assets/clear.png"},
+			{kind:"onyx.MoreToolbar", components:[
+				{kind:"onyx.InputDecorator", style:"min-width:16ex;", fit:true, components:[
+					{name:"input", kind:"onyx.Input", style:"width:100%", onkeypress:"handleKeyPress"},
+					//{kind:"onyx.IconButton", style:"margin:-1ex 0ex", ontap:"clearInput", src:"assets/clear.png"},
 				]},
 				{kind:"onyx.Button", content:"Paste", classes:"onyx-affirmative", ontap:"paste"},
 				{kind:"onyx.Button", content:"Refresh", ontap:"load"},
@@ -189,5 +188,10 @@ enyo.kind({
 	focusInput:function()
 	{
 		this.$.input.focus();
-	}
+	},
+	handleKeyPress:function(sender,event)
+	{
+		if(event.keyCode == 13)
+			this.paste();
+	},
 });

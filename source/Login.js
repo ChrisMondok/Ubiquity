@@ -16,10 +16,10 @@ enyo.kind({
 			{kind:"onyx.Groupbox", classes:"vertically-centered", fit:true, components:[
 				{kind:"onyx.GroupboxHeader", content:"Log in to Villo"},
 				{kind:"onyx.InputDecorator", components:[
-					{name:"usernameInput", kind:"onyx.Input", style:"width:100%", placeholder:"Username"},
+					{name:"usernameInput", kind:"onyx.Input", style:"width:100%", placeholder:"Username", onkeypress:"handleKeyPress"},
 				]},
 				{kind:"onyx.InputDecorator", components:[
-					{name:"passwordInput", kind:"onyx.Input", type:"password", style:"width:100%", placeholder:"Password"},
+					{name:"passwordInput", kind:"onyx.Input", type:"password", style:"width:100%", placeholder:"Password", onkeypress:"handleKeyPress"},
 				]},
 			]},
 			{style:"text-align:center", components:[
@@ -81,6 +81,11 @@ enyo.kind({
 	{
 		villo.user.logout();
 		this.doVilloLogoutComplete();
+	},
+	handleKeyPress:function(sender,event)
+	{
+		if(event.keyCode == 13)
+			this.login();
 	},
 	loginCallback:function(response)
 	{
