@@ -26,7 +26,7 @@ enyo.kind({
 					{name:"row", kind:onyx.Item, components:[
 						{kind:"FittableColumns", classes:"vertically-centered", components:[
 							{name:"visitUrlButton", kind:onyx.Button, content:$L("Go"), showing:false, ontap:"visitUrlTap"},
-							{name:"text", classes:"enyo-selectable clipboard-text", fit:true},
+							{name:"text", allowHtml:true, classes:"clipboard-text", fit:true, ontap:"copy"},
 							{name:"deleteButton", kind:onyx.Button, content:$L("Delete"), ontap:"deleteItem", classes:"onyx-negative"},
 						]},
 					]},
@@ -63,12 +63,31 @@ enyo.kind({
 	},
 	renderClipboardComponent:function(sender,event)
 	{
+		var sanitize = function(string)
+		{
+			var getClean = function(c)
+			{
+				return {
+					'<':'&lt;',
+					'>':'&gt;',
+					'&':'&amp;',
+				}[c]
+			}
+			return string.replace(/[<>&]/g,getClean);
+		}
 		var index = event.index;
 		var item = event.item;
-		var text = this.getItems()[index];
-		item.$.text.setContent(text);
-		if(this.getIsLink(text))
-			item.$.visitUrlButton.show();
+		var text = sanitize(this.getItems()[index]);
+		if(enyo.webOS.runTextIndexer)
+		{
+			item.$.text.setContent(enyo.webOS.runTextIndexer(text,{phoneNumber:true,emailAddress:true,webLink:true,schemalessWebLink:true,emoticon:false}));
+		}
+		else
+		{
+			item.$.text.setContent(text);
+			if(this.getIsLink(text))
+				item.$.visitUrlButton.show();
+		}
 		return true;
 	},
 	getIsLink:function(string)
@@ -110,14 +129,42 @@ enyo.kind({
 
 		this.$.clipboardRepeater.getComponents()[event.index].$.row.addClass("fadeout");
 	},
+	copy:function(sender,event)
+	{
+		sender.addClass("enyo-selectable");
+		if(document.selection)
+		{
+			var range = document.body.createTextRange();
+			range.moveToElementText(sender.node);
+			range.select();
+		}
+		else
+		{
+			if(window.getSelection)
+			{
+				var range = document.createRange();
+				range.selectNode(sender.node);
+				window.getSelection().addRange(range);
+			}
+		}
+		if(enyo.webOS.addBannerMessage)
+		{
+			enyo.webOS.addBannerMessage("Selection Copied","{}" );
+			document.execCommand("copy");
+			sender.removeClass("enyo-selectable");
+		}
+	},
 	paste:function()
 	{
-		this.items.unshift(this.$.input.getValue());
-		this.$.input.setValue("");
-		this.focusInput();
-		villo.storage.set({privacy:true,title:"clipboard",data:escape(enyo.json.stringify(this.getItems()))});
-		this.itemsChanged();
-		this.doNewItemAdded();
+		if(this.$.input.getValue().length)
+		{
+			this.items.unshift(this.$.input.getValue());
+			this.$.input.setValue("");
+			this.focusInput();
+			villo.storage.set({privacy:true,title:"clipboard",data:escape(enyo.json.stringify(this.getItems()))});
+			this.itemsChanged();
+			this.doNewItemAdded();
+		}
 	},
 	clearInput:function()
 	{
@@ -153,6 +200,7 @@ enyo.kind({
 	},
 	visitUrlTap:function(sender,event)
 	{
+		//document.execCommand("copy");
 		var URL = this.getItems()[event.index];
 		this.visitUrl(URL);
 	},
