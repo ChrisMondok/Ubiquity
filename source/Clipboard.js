@@ -163,7 +163,7 @@ enyo.kind({
 			this.items.unshift(this.$.input.getValue());
 			this.$.input.setValue("");
 			this.focusInput();
-			Ubiquity.backend.setClipboard(escape(enyo.json.stringify(this.getItems())));
+			Ubiquity.backend.addToClipboard(escape(enyo.json.stringify(this.getItems())));
 			this.itemsChanged();
 			this.doNewItemAdded();
 		}
@@ -175,7 +175,7 @@ enyo.kind({
 	clearAll:function()
 	{
 		this.setItems([]);
-		villo.storage.set({privacy:true,title:"clipboard",data:escape(enyo.json.stringify(this.getItems()))});
+		Ubiquity.backend.setClipboard(escape(enyo.json.stringify(this.getItems())));
 		this.itemsChanged();
 		this.doLocalChangeMade();
 	},
