@@ -54,7 +54,7 @@ enyo.kind({
 		{
 			var newItem = response.message.newItem;
 			this.$.Clipboard.addTransientItem(unescape(newItem));
-			if(enyo.webOS)
+			if(enyo.webOS.isActivated && enyo.webOS.addBannerMessage)
 			{
 				if(!enyo.webOS.isActivated())
 					enyo.webOS.addBannerMessage(unescape(response.message.newItem),"{}" );

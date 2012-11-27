@@ -24,9 +24,9 @@ enyo.kind({
 			{kind:enyo.Scroller, fit:true, components:[
 				{name:"clipboardRepeater", kind:enyo.Repeater, onSetupItem:"renderClipboardComponent", components:[
 					{name:"row", kind:onyx.Item, components:[
-						{kind:"FittableColumns", classes:"vertically-centered", components:[
+						{kind:"FittableColumns", ontap:"copy", classes:"vertically-centered", components:[
 							{name:"visitUrlButton", kind:onyx.Button, content:$L("Go"), showing:false, ontap:"visitUrlTap"},
-							{name:"text", allowHtml:true, classes:"clipboard-text", fit:true, ontap:"copy"},
+							{name:"text", allowHtml:true, classes:"clipboard-text", fit:true},
 							{name:"deleteButton", kind:onyx.Button, content:$L("Delete"), ontap:"deleteItem", classes:"onyx-negative"},
 						]},
 					]},
@@ -131,11 +131,13 @@ enyo.kind({
 	},
 	copy:function(sender,event)
 	{
+		//TODO: how can I identify this element by name?
+		var textItem = sender.node.getElementsByClassName('clipboard-text')[0];
 		sender.addClass("enyo-selectable");
 		if(document.selection)
 		{
 			var range = document.body.createTextRange();
-			range.moveToElementText(sender.node);
+			range.moveToElementText(textItem);
 			range.select();
 		}
 		else
@@ -143,7 +145,7 @@ enyo.kind({
 			if(window.getSelection)
 			{
 				var range = document.createRange();
-				range.selectNode(sender.node);
+				range.selectNode(textItem);
 				window.getSelection().addRange(range);
 			}
 		}
