@@ -14,8 +14,8 @@ enyo.kind({
 	handlers:
 	{
 		onLogout:"logout",
-		onVilloLoginComplete:"initializeClipboard",
-		onVilloLogoutComplete:"gotMessage",
+		onLoginComplete:"initializeClipboard",
+		onLogoutComplete:"showLogin",
 		onShowSettings:"showSettings",
 		onGotMessage:"gotMessage",
 		onLocalChangeMade:"sendMessage",
@@ -24,13 +24,19 @@ enyo.kind({
 		onClearTapped:"doClearAll",
 	},
 	statics:{
-		ID:Math.random()
+		ID:Math.random(),
+		backend:undefined,
 	},
 	components:[
 		{name:"Login", kind:"Ubiquity.Login"},
 		{name:"Clipboard", kind:"Ubiquity.Clipboard"},
 		{kind:"Ubiquity.Settings"}
 	],
+	create:function()
+	{
+		this.inherited(arguments);
+		Ubiquity.backend = this.createComponent({kind:"Ubiquity.Backend.Villo"});
+	},
 	initializeClipboard:function()
 	{
 		this.$.Clipboard.load();

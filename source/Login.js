@@ -3,12 +3,12 @@ enyo.kind({
 	classes:"onyx centered vertically-centered",
 	kind:"Scroller",
 	events:{
-		onVilloLoginComplete:"",
-		onVilloLogoutComplete:"",
+		onLoginComplete:"",
+		onLogoutComplete:"",
 		onGotMessage:"",
 	},
 	handlers:{
-		onVilloLoginComplete:"connectToMessaging",
+		onLoginComplete:"connectToMessaging",
 		onRegisterComplete:"registerComplete",
 	},
 	components:[
@@ -41,46 +41,31 @@ enyo.kind({
 	{
 		this.$.panels.setIndex(1);
 	},
-	create:function()
-	{
-		this.inherited(arguments);
-		villo.load({
-			id:"com.chrismondok.ubiquity",
-			version:"2.0.0",
-			developer:"Chris Mondok",
-			type:"mobile",
-			title:"Ubiquity",
-			push:true
-		});
-	},
 	rendered:function()
 	{
 		this.inherited(arguments);
+		Ubiquity.backend.init();
 		this.redirect();
 	},
 	redirect:function()
 	{
-		if(villo.user.isLoggedIn())
+		if(Ubiquity.backend.isLoggedIn())
 		{
-			this.$.usernameInput.setValue(villo.user.username);
-			this.doVilloLoginComplete();
+			this.$.usernameInput.setValue(Ubiquity.backend.getUsername());
+			this.doLoginComplete();
 		}
 	},
 	login:function()
 	{
-		villo.user.login(
-			{
-				username:this.$.usernameInput.getValue(),
-				password:this.$.passwordInput.getValue()
-			},
-			this.loginCallback.bind(this)
-		);
+		var username = this.$.usernameInput.getValue();
+		var password = this.$.passwordInput.getValue();
+		Ubiquity.backend.login(username, password,this.loginCallback.bind(this));
 		this.hideError();
 	},
 	logout:function()
 	{
-		villo.user.logout();
-		this.doVilloLogoutComplete();
+		Ubiquity.backend.logout();
+		this.doLogoutComplete();
 	},
 	handleKeyPress:function(sender,event)
 	{
@@ -91,10 +76,10 @@ enyo.kind({
 	{
 		if(response === true)
 		{
-			if(villo.user.isLoggedIn())
+			if(Ubiquity.backend.isLoggedIn())
 			{
 				this.$.passwordInput.setValue("");
-				this.doVilloLoginComplete();
+				this.doLoginComplete();
 			}
 			else
 			{
@@ -110,10 +95,8 @@ enyo.kind({
 	},
 	connectToMessaging:function()
 	{
-		if(!villo.chat.isSubscribed(villo.user.username))
-		{
-			villo.chat.join({room:villo.user.username,callback:this.doGotMessage.bind(this),presence: {enabled:false}})
-		}
+		if(!Ubiquity.backend.isSubscribed())
+			Ubiquity.backend.subscribe(this.doGotMessage.bind(this));
 	},
 	registerComplete:function()
 	{

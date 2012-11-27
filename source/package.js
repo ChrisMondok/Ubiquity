@@ -2,7 +2,6 @@ enyo.depends(
 	"$lib/layout",
 	"$lib/onyx",
 	"$lib/webos-ext",
-	"$lib/villo",
 	"$lib/g11n",
 	"App.css",
 	"Animations.css",
@@ -11,5 +10,6 @@ enyo.depends(
 	"Login.js",
 	"Register.js",
 	"Settings.js",
-	"WebView.js"
+	"WebView.js",
+	"Villo"
 );

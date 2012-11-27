@@ -118,13 +118,13 @@ enyo.kind({
 				this.setItems(new Array());
 			this.setInitialLoad(false);
 		}
-		villo.storage.get({privacy:true,title:"clipboard",callback:gotClipboard.bind(this)});
+		Ubiquity.backend.loadClipboard(gotClipboard.bind(this));
 	},
 	deleteItem:function(sender,event)
 	{
 		var items = this.getItems();
 		items.splice(event.index,1);
-		villo.storage.set({privacy:true,title:"clipboard",data:escape(enyo.json.stringify(items))});
+		Ubiquity.backend.setClipboard(escape(enyo.json.stringify(items)));
 		this.doLocalChangeMade();
 
 		this.$.clipboardRepeater.getComponents()[event.index].$.row.addClass("fadeout");
@@ -163,7 +163,7 @@ enyo.kind({
 			this.items.unshift(this.$.input.getValue());
 			this.$.input.setValue("");
 			this.focusInput();
-			villo.storage.set({privacy:true,title:"clipboard",data:escape(enyo.json.stringify(this.getItems()))});
+			Ubiquity.backend.setClipboard(escape(enyo.json.stringify(this.getItems())));
 			this.itemsChanged();
 			this.doNewItemAdded();
 		}
