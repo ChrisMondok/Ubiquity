@@ -13,8 +13,6 @@ enyo.kind({
 	},
 	events:{
 		onShowSettings:"",
-		onLocalChangeMade:"",
-		onNewItemAdded:""
 	},
 	handlers:{
 		onClearAll:"clearAll",
@@ -99,23 +97,19 @@ enyo.kind({
 	},
 	load:function() // render
 	{
-		var gotClipboard = function(cb)
+		var gotClipboard = function(items)
 		{
-			var parsed;
-			if(cb.storage)
+			if(items)
 			{
-				var unparsed = unescape(cb.storage);
-				parsed = enyo.json.parse(unparsed);
 				if(Ubiquity.Settings.openLinksAutomatically)
-					if(!this.getInitialLoad() && parsed.length - 1 == this.getItems().length)
-						if(this.getIsLink(parsed[0]))
-							this.visitUrl(parsed[0]);
+					if(!this.getInitialLoad() && items.length - 1 == this.getItems().length)
+						if(this.getIsLink(items[0]))
+							this.visitUrl(items[0]);
+				this.setItems(items);
 			}
-
-			if(parsed)
-				this.setItems(parsed);
 			else
 				this.setItems(new Array());
+
 			this.setInitialLoad(false);
 		}
 		Ubiquity.backend.loadClipboard(gotClipboard.bind(this));
@@ -124,8 +118,7 @@ enyo.kind({
 	{
 		var items = this.getItems();
 		items.splice(event.index,1);
-		Ubiquity.backend.setClipboard(escape(enyo.json.stringify(items)));
-		this.doLocalChangeMade();
+		Ubiquity.backend.setClipboard(items);
 
 		this.$.clipboardRepeater.getComponents()[event.index].$.row.addClass("fadeout");
 	},
@@ -163,9 +156,8 @@ enyo.kind({
 			this.items.unshift(this.$.input.getValue());
 			this.$.input.setValue("");
 			this.focusInput();
-			Ubiquity.backend.addToClipboard(escape(enyo.json.stringify(this.getItems())));
+			Ubiquity.backend.addToClipboard(this.getItems());
 			this.itemsChanged();
-			this.doNewItemAdded();
 		}
 	},
 	clearInput:function()
@@ -175,9 +167,8 @@ enyo.kind({
 	clearAll:function()
 	{
 		this.setItems([]);
-		Ubiquity.backend.setClipboard(escape(enyo.json.stringify(this.getItems())));
+		Ubiquity.backend.setClipboard(this.getItems());
 		this.itemsChanged();
-		this.doLocalChangeMade();
 	},
 	addTransientItem:function(input)
 	{

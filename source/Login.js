@@ -5,7 +5,6 @@ enyo.kind({
 	events:{
 		onLoginComplete:"",
 		onLogoutComplete:"",
-		onGotMessage:"",
 	},
 	handlers:{
 		onLoginComplete:"connectToMessaging",
@@ -96,7 +95,7 @@ enyo.kind({
 	connectToMessaging:function()
 	{
 		if(!Ubiquity.backend.isSubscribed())
-			Ubiquity.backend.subscribe(this.doGotMessage.bind(this));
+			Ubiquity.backend.subscribe();
 	},
 	registerComplete:function()
 	{

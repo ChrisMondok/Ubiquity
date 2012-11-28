@@ -6,6 +6,11 @@ enyo.kind({
 	classes:"onyx",
 	draggable:false,
 	fit: true,
+	published:
+	{
+		backendKind:"Ubiquity.Backend.Villo",
+		backend:null,
+	},
 	events:
 	{
 		onOpenLinksAutomaticallyChanged:"",
@@ -17,9 +22,7 @@ enyo.kind({
 		onLoginComplete:"initializeClipboard",
 		onLogoutComplete:"showLogin",
 		onShowSettings:"showSettings",
-		onGotMessage:"gotMessage",
-		onLocalChangeMade:"sendMessage",
-		onNewItemAdded:"sendNewItemMessage",
+		onGotChanges:"gotChanges",
 		onBack:"goBack",
 		onClearTapped:"doClearAll",
 	},
@@ -35,7 +38,8 @@ enyo.kind({
 	create:function()
 	{
 		this.inherited(arguments);
-		Ubiquity.backend = this.createComponent({kind:"Ubiquity.Backend.Villo"});
+		if(!this.getBackend())
+			this.setBackend(this.createComponent({kind:this.backendKind}));
 	},
 	initializeClipboard:function()
 	{
@@ -54,16 +58,16 @@ enyo.kind({
 	{
 		this.setIndex(2);
 	},
-	gotMessage:function(caller,response)
+	gotChanges:function(caller,changes)
 	{
-		if(response.message.newItem && response.message.id != Ubiquity.ID)
+		if(changes.newItem)
 		{
-			var newItem = response.message.newItem;
-			this.$.Clipboard.addTransientItem(unescape(newItem));
+			var newItem = changes.newItem;
+			this.$.Clipboard.addTransientItem(newItem);
 			if(enyo.webOS.isActivated && enyo.webOS.addBannerMessage)
 			{
 				if(!enyo.webOS.isActivated())
-					enyo.webOS.addBannerMessage(unescape(response.message.newItem),"{}" );
+					enyo.webOS.addBannerMessage(newItem,"{}" );
 			}
 		}
 
@@ -76,17 +80,6 @@ enyo.kind({
 		//AFAIK, we can't tell when the remote settings have changed,
 		//so we assume it takes less than a second.
 		setTimeout(loadClipboard.bind(this),1000)
-	},
-	sendMessage:function()
-	{
-		villo.chat.send({room:villo.user.username,message:{"id":Ubiquity.ID}});
-	},
-	sendNewItemMessage:function()
-	{
-		villo.chat.send({room:villo.user.username,message:{
-			"id":Ubiquity.ID,
-			"newItem":escape(this.$.Clipboard.getItems()[0])
-		}});
 	},
 	logout:function()
 	{
@@ -101,5 +94,14 @@ enyo.kind({
 	{
 		this.waterfall("onClearAll");
 	},
+	backendChanged:function(oldBackend)
+	{
+		if(oldBackend)
+		{
+			oldBackend.unsubscribe();
+			//log out?
+		}
+		Ubiquity.backend = this.getBackend();
+	}
 });
 
