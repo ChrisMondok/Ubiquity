@@ -1,14 +1,9 @@
 enyo.kind({
 	name: "Ubiquity",
-	kind:"Panels",
-	arrangerKind:"LeftRightArranger",
-	margin:0,
-	classes:"onyx",
-	draggable:false,
-	fit: true,
+	fit:true,
 	published:
 	{
-		backendKind:"Ubiquity.Backend.Villo",
+		backendKind:"Ubiquity.Backend.Node",
 		backend:null,
 	},
 	events:
@@ -19,21 +14,24 @@ enyo.kind({
 	handlers:
 	{
 		onLogout:"logout",
-		onLoginComplete:"initializeClipboard",
 		onLogoutComplete:"showLogin",
 		onShowSettings:"showSettings",
-		onGotChanges:"gotChanges",
+		onGotNewItem:"gotNewItem",
 		onBack:"goBack",
 		onClearTapped:"doClearAll",
+		onLoginComplete:"loginComplete",
+		onGotClipboard:"gotClipboard",
 	},
 	statics:{
 		ID:Math.random(),
 		backend:undefined,
 	},
 	components:[
-		{name:"Login", kind:"Ubiquity.Login"},
-		{name:"Clipboard", kind:"Ubiquity.Clipboard"},
-		{kind:"Ubiquity.Settings"}
+		{name:"Panels", kind:"Panels", arrangerKind:"LeftRightArranger", margin:0, classes:"onyx enyo-fit", draggable:false, fit:true, components:[
+			{name:"Login", kind:"Ubiquity.Login"},
+			{name:"Clipboard", kind:"Ubiquity.Clipboard"},
+			{kind:"Ubiquity.Settings"}
+		]},
 	],
 	create:function()
 	{
@@ -41,45 +39,36 @@ enyo.kind({
 		if(!this.getBackend())
 			this.setBackend(this.createComponent({kind:this.backendKind}));
 	},
-	initializeClipboard:function()
+	loginComplete:function()
 	{
-		this.$.Clipboard.load();
 		this.showClipboard();
 	},
 	showLogin:function()
 	{
-		this.setIndex(0);
+		this.$.Panels.setIndex(0);
+		this.$.Clipboard.setItems([]);
 	},
 	showClipboard:function()
 	{
-		this.setIndex(1);
+		this.$.Panels.setIndex(1);
 	},
 	showSettings:function()
 	{
-		this.setIndex(2);
+		this.$.Panels.setIndex(2);
 	},
-	gotChanges:function(caller,changes)
+	gotNewItem:function(caller,changes)
 	{
-		if(changes.newItem)
+		var newItem = changes.newItem;
+		this.$.Clipboard.addTransientItem(newItem);
+		if(enyo.webOS.isActivated && enyo.webOS.addBannerMessage)
 		{
-			var newItem = changes.newItem;
-			this.$.Clipboard.addTransientItem(newItem);
-			if(enyo.webOS.isActivated && enyo.webOS.addBannerMessage)
-			{
-				if(!enyo.webOS.isActivated())
-					enyo.webOS.addBannerMessage(newItem,"{}" );
-			}
+			if(!enyo.webOS.isActivated())
+				enyo.webOS.addBannerMessage(newItem,"{}" );
 		}
-
-		var loadClipboard = function()
-		{
-			this.$.Clipboard.load();
-		}
-			
-		//this is what we like to call a nasty hack.
-		//AFAIK, we can't tell when the remote settings have changed,
-		//so we assume it takes less than a second.
-		setTimeout(loadClipboard.bind(this),1000)
+	},
+	gotClipboard:function(sender,data)
+	{
+		this.$.Clipboard.setItems(data.clipboard);
 	},
 	logout:function()
 	{

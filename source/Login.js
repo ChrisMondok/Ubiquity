@@ -2,18 +2,10 @@ enyo.kind({
 	name:"Ubiquity.Login",
 	classes:"onyx centered vertically-centered",
 	kind:"Scroller",
-	events:{
-		onLoginComplete:"",
-		onLogoutComplete:"",
-	},
-	handlers:{
-		onLoginComplete:"connectToMessaging",
-		onRegisterComplete:"registerComplete",
-	},
 	components:[
 		{classes:"centered-form", components:[
 			{kind:"onyx.Groupbox", classes:"vertically-centered", fit:true, components:[
-				{kind:"onyx.GroupboxHeader", content:"Log in to Villo"},
+				{kind:"onyx.GroupboxHeader", content:"Log in"},
 				{kind:"onyx.InputDecorator", components:[
 					{name:"usernameInput", kind:"onyx.Input", style:"width:100%", placeholder:"Username", onkeypress:"handleKeyPress"},
 				]},
@@ -44,65 +36,28 @@ enyo.kind({
 	{
 		this.inherited(arguments);
 		Ubiquity.backend.init();
-		this.redirect();
-	},
-	redirect:function()
-	{
-		if(Ubiquity.backend.isLoggedIn())
-		{
-			this.$.usernameInput.setValue(Ubiquity.backend.getUsername());
-			this.doLoginComplete();
-		}
 	},
 	login:function()
 	{
 		var username = this.$.usernameInput.getValue();
 		var password = this.$.passwordInput.getValue();
-		Ubiquity.backend.login(username, password,this.loginCallback.bind(this));
+		Ubiquity.backend.login(username, password);
 		this.hideError();
-	},
-	logout:function()
-	{
-		Ubiquity.backend.logout();
-		this.doLogoutComplete();
 	},
 	handleKeyPress:function(sender,event)
 	{
 		if(event.keyCode == 13)
 			this.login();
 	},
-	loginCallback:function(response)
+	showLoginError:function(message)
 	{
-		if(response === true)
-		{
-			if(Ubiquity.backend.isLoggedIn())
-			{
-				this.$.passwordInput.setValue("");
-				this.doLoginComplete();
-			}
-			else
-			{
-				this.$.errorDrawer.setOpen(true);
-				this.$.errorMessage.setContent("Login failed");
-			}
-		}
-		else
-		{
-			this.$.errorDrawer.setOpen(true);
-			this.$.errorMessage.setContent("Check username and password");
-		}
+		this.$.errorDrawer.setOpen(true);
+		this.$.errorMessage.setContent(message);
 	},
 	connectToMessaging:function()
 	{
 		if(!Ubiquity.backend.isSubscribed())
 			Ubiquity.backend.subscribe();
-	},
-	registerComplete:function()
-	{
-		this.$.usernameInput.setValue(this.$.registerPane.$.username.getValue());
-		this.$.passwordInput.setValue(this.$.registerPane.$.password.getValue());
-		this.showLoginPane();
-		this.login();
 	},
 	hideError:function()
 	{

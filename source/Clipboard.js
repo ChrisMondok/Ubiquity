@@ -156,7 +156,7 @@ enyo.kind({
 			this.items.unshift(this.$.input.getValue());
 			this.$.input.setValue("");
 			this.focusInput();
-			Ubiquity.backend.addToClipboard(this.getItems());
+			Ubiquity.backend.addToClipboard(this.getItems()[0]);
 			this.itemsChanged();
 		}
 	},

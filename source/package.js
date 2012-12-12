@@ -11,6 +11,5 @@ enyo.depends(
 	"Register.js",
 	"Settings.js",
 	"WebView.js",
-	"Villo",
-	"Box.net"
+	"Node"
 );
